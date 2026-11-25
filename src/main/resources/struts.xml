@@ -1,0 +1,36 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <constant name="struts.devMode" value="false"/>
+
+    <constant name="struts.enable.SlashesInActionNames"
+              value="true"/>
+
+    <package name="ticket-api"
+             namespace="/api"
+             extends="struts-default">
+
+        <!-- GET /api/tickets
+             POST /api/tickets -->
+
+        <action name="tickets"
+                class="action.TicketController">
+        </action>
+
+        <!-- GET /api/tickets/1001
+             PUT /api/tickets/1001
+             DELETE /api/tickets/1001 -->
+
+        <action name="tickets/*"
+                class="action.TicketController">
+        </action>
+
+    </package>
+
+</struts>
