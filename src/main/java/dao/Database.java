@@ -19,8 +19,8 @@ public final class Database {
             return;
         }
 
-        String url = System.getenv("DATABASE_URL");
-        String username = System.getenv("DB_USERNAME");
+        String url = System.getenv("DB_URL");
+        String username = System.getenv("DB_USER");
         String password = System.getenv("DB_PASSWORD");
 
         if (url == null || username == null || password == null) {

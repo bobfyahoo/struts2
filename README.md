@@ -26,7 +26,12 @@ If Docker is installed on your computer, execute:
 
 docker build -t struts2-app .
 
-docker run -p 10000:10000 struts2-app
+docker run --name struts2-app -p 10000:10000 -e DB_URL="jdbc:postgresql://external url from render" ` -e DB_USERNAME="tickets_ay9l_user" `-e DB_PASSWORD="pw" `struts2-app
 
 Open: http://localhost:10000
 
+docker exec struts2-app sh -c "ls -lah /usr/local/tomcat/logs/"
+
+docker exec struts2-app sh -c "grep -n -A 30 -B 10 -E 'SEVERE|Exception|Caused by' /usr/local/tomcat/logs/*"
+
+docker exec struts2-app sh -c "env | grep -E 'DB_|DATABASE|JDBC'"
