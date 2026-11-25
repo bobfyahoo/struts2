@@ -19,6 +19,15 @@
     <constant name="struts.action.extension"
               value="xhtml,,xml,json,action"/>
 
+    <!-- index.jsp -->
+    <package name="default" namespace="/" extends="struts-default">
+
+        <action name="">
+            <result>/index.jsp</result>
+        </action>
+
+    </package>
+
     <!-- API v1: existing controller -->
     <package name="ticket-api-v1"
              namespace="/api/v1"
