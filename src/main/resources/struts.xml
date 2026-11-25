@@ -6,30 +6,37 @@
 
 <struts>
 
-    <constant name="struts.devMode" value="false"/>
+    <!-- Route v2 through the REST mapper; everything else through normal Struts -->
+    <constant name="struts.mapper.class"
+              value="org.apache.struts2.dispatcher.mapper.PrefixBasedActionMapper"/>
 
-    <constant name="struts.enable.SlashesInActionNames"
-              value="true"/>
+    <constant name="struts.mapper.prefixMapping"
+              value="/api/v2:rest,:struts"/>
 
-    <package name="ticket-api"
-             namespace="/api"
+    <constant name="struts.actionProxyFactory"
+              value="prefix"/>
+
+    <constant name="struts.action.extension"
+              value="xhtml,,xml,json,action"/>
+
+    <!-- API v1: existing controller -->
+    <package name="ticket-api-v1"
+             namespace="/api/v1"
              extends="struts-default">
 
-        <!-- GET /api/tickets
-             POST /api/tickets -->
+        <!-- Preserve your existing v1 action mapping -->
+        <action name="tickets"
+                class="action.v1.TicketController"/>
+    </package>
+
+
+    <!-- API v2: REST plugin -->
+    <package name="ticket-api-v2"
+             namespace="/api/v2"
+             extends="rest-default">
 
         <action name="tickets"
-                class="action.TicketController">
-        </action>
-
-        <!-- GET /api/tickets/1001
-             PUT /api/tickets/1001
-             DELETE /api/tickets/1001 -->
-
-        <action name="tickets/*"
-                class="action.TicketController">
-        </action>
-
+                class="action.v2.TicketController"/>
     </package>
 
 </struts>

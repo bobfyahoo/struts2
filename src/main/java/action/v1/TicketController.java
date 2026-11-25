@@ -1,4 +1,4 @@
-package action;
+package action.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
