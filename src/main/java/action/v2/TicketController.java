@@ -26,10 +26,15 @@ public class TicketController extends ActionSupport
     @Setter
     private String id;
 
-    private final TicketService service = new TicketService();
+    @Setter
+    private TicketService service;
     private final ObjectMapper mapper = new ObjectMapper();
 
     private final Ticket ticket = new Ticket();
+
+    public TicketController() {
+        service = new TicketService();
+    }
 
     @Override
     public Ticket getModel() {

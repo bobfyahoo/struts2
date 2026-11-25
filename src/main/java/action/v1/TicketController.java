@@ -3,6 +3,7 @@ package action.v1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
 import dao.Database;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import model.Ticket;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -22,8 +23,13 @@ public class TicketController extends ActionSupport
     private HttpServletRequest request;
     private HttpServletResponse response;
 
-    private final TicketService service = new TicketService();
+    @Setter
+    private TicketService service;
     private final ObjectMapper mapper = new ObjectMapper();
+
+    public TicketController() {
+        service = new TicketService();
+    }
 
     @Override
     public String execute() {
@@ -31,7 +37,7 @@ public class TicketController extends ActionSupport
         try {
             request.setCharacterEncoding("UTF-8");
 
-            Database.initialize();
+            initializeDatabase();
 
             String method = request.getMethod();
             Long id = extractId();
@@ -91,6 +97,10 @@ public class TicketController extends ActionSupport
         }
 
         return NONE;
+    }
+
+    protected void initializeDatabase() {
+        Database.initialize();
     }
 
     private void getTickets() throws Exception {
