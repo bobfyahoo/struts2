@@ -34,6 +34,7 @@ public final class Database {
         config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
+        config.setDriverClassName("org.postgresql.Driver");
 
         config.setMaximumPoolSize(5);
         config.setMinimumIdle(1);
