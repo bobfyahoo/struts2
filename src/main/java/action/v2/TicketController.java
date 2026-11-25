@@ -6,6 +6,8 @@ import com.opensymphony.xwork2.ModelDriven;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import model.Ticket;
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
 import service.TicketService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +18,7 @@ import java.util.Map;
 
 @Slf4j
 public class TicketController extends ActionSupport
-        implements ModelDriven<Ticket> {
+        implements ModelDriven<Ticket>, ServletRequestAware, ServletResponseAware {
 
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -163,5 +165,15 @@ public class TicketController extends ActionSupport
     @FunctionalInterface
     private interface RequestOperation {
         void run() throws Exception;
+    }
+
+    @Override
+    public void setServletRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    @Override
+    public void setServletResponse(HttpServletResponse response) {
+        this.response = response;
     }
 }
