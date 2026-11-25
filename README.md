@@ -28,7 +28,20 @@ docker build -t struts2-app .
 
 docker run --name struts2-app -p 10000:10000 -e DB_URL="jdbc:postgresql://external url from render" ` -e DB_USERNAME="tickets_ay9l_user" `-e DB_PASSWORD="pw" `struts2-app
 
-Open: http://localhost:10000
+1. List all tickets
+   GET
+
+http://localhost:10000/api/tickets
+
+Copy
+
+2. Retrieve a specific ticket
+
+http://localhost:10000/api/tickets/1001
+
+3. Create a ticket
+
+POST http://localhost:10000/api/tickets
 
 docker exec struts2-app sh -c "ls -lah /usr/local/tomcat/logs/"
 

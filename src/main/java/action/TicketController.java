@@ -3,6 +3,7 @@ package action;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opensymphony.xwork2.ActionSupport;
 import dao.Database;
+import lombok.extern.slf4j.Slf4j;
 import model.Ticket;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class TicketController extends ActionSupport
         implements ServletRequestAware, ServletResponseAware {
 
@@ -84,7 +86,7 @@ public class TicketController extends ActionSupport
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            log.error("unexpected {}", e.getMessage(),e);
             sendError(500, "Internal server error");
         }
 
