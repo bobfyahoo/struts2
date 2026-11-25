@@ -11,7 +11,7 @@
               value="org.apache.struts2.dispatcher.mapper.PrefixBasedActionMapper"/>
 
     <constant name="struts.mapper.prefixMapping"
-              value="/api/v2:rest,:struts"/>
+              value="/api/v2:rest,/api/v3:rest,:struts"/>
 
     <constant name="struts.actionProxyFactory"
               value="prefix"/>
@@ -37,6 +37,15 @@
 
         <action name="tickets"
                 class="action.v2.TicketController"/>
+    </package>
+
+    <!-- API v2: REST plugin -->
+    <package name="ticket-api-v3"
+             namespace="/api/v3"
+             extends="rest-default">
+
+        <action name="tickets"
+                class="action.v3.TicketController"/>
     </package>
 
 </struts>
