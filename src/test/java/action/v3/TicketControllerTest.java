@@ -1,4 +1,4 @@
-package action.v2;
+package action.v3;
 
 import model.Ticket;
 import org.junit.jupiter.api.Assertions;
@@ -9,38 +9,57 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import service.TicketService;
+import service.TicketServiceSpring;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
 class TicketControllerTest {
 
     @Mock
-    private TicketService service;
+    private TicketServiceSpring service;
 
     @Mock
     private HttpServletRequest request;
 
-    @Mock
+    @Mock(lenient = true)  // delete does not return a body so mock gives UnnecessaryStubbingException
     private HttpServletResponse response;
 
     @InjectMocks
     private TicketController controller;
 
-    private StringWriter responseBody;
+    private ByteArrayOutputStream responseBody;
 
     @BeforeEach
     void setUp() throws Exception {
 
-        responseBody = new StringWriter();
+        responseBody = new ByteArrayOutputStream();
 
-        Mockito.when(response.getWriter())
-                .thenReturn(new PrintWriter(responseBody));
+        ServletOutputStream outputStream = new ServletOutputStream() {
+
+            @Override
+            public void write(int b) throws IOException {
+                responseBody.write(b);
+            }
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener listener) {
+                // Not needed for this unit test
+            }
+        };
+
+        Mockito.when(response.getOutputStream()).thenReturn(outputStream);
 
         controller.setServletRequest(request);
         controller.setServletResponse(response);
@@ -56,12 +75,12 @@ class TicketControllerTest {
                 "OPEN"
         );
 
-        Mockito.when(service.getTickets("OPEN", "Robert"))
+        Mockito.when(service.getTickets())
                 .thenReturn(Collections.singletonList(ticket));
 
         controller.index();
 
-        Mockito.verify(service).getTickets("OPEN", "Robert");
+        Mockito.verify(service).getTickets();
         Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
 
         Assertions.assertTrue(responseBody.toString().contains("Fix login issue"));
@@ -118,19 +137,21 @@ class TicketControllerTest {
     @Test
     void updateUpdatesTicket() throws Exception {
 
-        controller.setId("1");
+        Long id = 1L;
+        controller.setId(id.toString());
 
         Ticket ticket = controller.getModel();
 
+        ticket.setId(id);
         ticket.setSummary("Updated summary");
         ticket.setAssignee("Robert");
         ticket.setStatus("CLOSED");
 
-        Mockito.when(service.updateTicket(1L, ticket)).thenReturn(true);
+        Mockito.when(service.updateTicket(id, ticket)).thenReturn(ticket);
 
         controller.update();
 
-        Mockito.verify(service).updateTicket(1L, ticket);
+        Mockito.verify(service).updateTicket(id, ticket);
         Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
 
         Assertions.assertTrue(responseBody.toString().contains("Updated summary"));
@@ -139,23 +160,26 @@ class TicketControllerTest {
     @Test
     void destroyDeletesTicket() throws Exception {
 
-        controller.setId("1");
+        Long id = 1L;
+        Mockito.when(service.deleteTicket(id)).thenReturn(true);
+
+        controller.setId(id.toString());
 
         controller.destroy();
 
-        Mockito.verify(service).deleteTicket(1L);
+        Mockito.verify(service).deleteTicket(id);
         Mockito.verify(response).setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     @Test
     void indexReturnsEmptyArrayWhenNoTicketsExist() throws Exception {
 
-        Mockito.when(service.getTickets(null, null))
+        Mockito.when(service.getTickets())
                 .thenReturn(Collections.emptyList());
 
         controller.index();
 
-        Mockito.verify(service).getTickets(null, null);
+        Mockito.verify(service).getTickets();
 
         Assertions.assertEquals("[]", responseBody.toString().trim());
     }
