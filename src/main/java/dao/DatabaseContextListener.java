@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.sql.SQLException;
 
 @Slf4j
 public class DatabaseContextListener
@@ -13,12 +12,12 @@ public class DatabaseContextListener
     @Override
     public void contextInitialized(ServletContextEvent event) {
         Database.initialize();
-        try {
+     /*   try {
             Database.initializeSchema();
         } catch (SQLException e) {
             log.error("initializeSchema", e);
             throw new RuntimeException(e);
-        }
+        }*/
     }
 
     @Override
