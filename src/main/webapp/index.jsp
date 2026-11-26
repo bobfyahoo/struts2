@@ -53,7 +53,7 @@
     </table>
 
     <script>
-        const apiUrl = 'http://localhost:10000/api/v3/tickets';
+        const apiUrl = '<%= request.getContextPath() %>/api/v3/tickets';
 
         function loadTickets() {
             $.ajax({
