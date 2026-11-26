@@ -56,7 +56,7 @@ public class PersistenceConfig {
         );
 
         // Check the existing database schema; do not modify it.
-        //properties.put("hibernate.hbm2ddl.auto", "validate");
+        properties.put("hibernate.hbm2ddl.auto", "none");
 
         properties.put("hibernate.show_sql", "false");
         properties.put("hibernate.format_sql", "false");
